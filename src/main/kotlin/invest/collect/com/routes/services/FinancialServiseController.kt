@@ -18,7 +18,7 @@ const val financialUrl = "http://localhost:7777"
 fun Route.financialRoutes() {
     put("/topUp/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
-        val amount: Int = call.parameters["amount"]!!.toInt()
+        val amount: Double = call.parameters["amount"]!!.toDouble()
         HttpClientFactory.createHttpClient().use { client ->
             val response: HttpResponse = client.put("$financialUrl/topUp/$userId/$amount")
             when (response.status) {
@@ -39,7 +39,7 @@ fun Route.financialRoutes() {
 
     post("/buy/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
-        val amount: Int = call.parameters["amount"]!!.toInt()
+        val amount: Double = call.parameters["amount"]!!.toDouble()
         HttpClientFactory.createHttpClient().use { client ->
             val response: HttpResponse = client.post("$financialUrl/buy/$userId/$amount")
             when (response.status) {
@@ -60,7 +60,7 @@ fun Route.financialRoutes() {
 
     post("/sell/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
-        val amount: Int = call.parameters["amount"]!!.toInt()
+        val amount: Double = call.parameters["amount"]!!.toDouble()
         HttpClientFactory.createHttpClient().use { client ->
             val response: HttpResponse = client.post("$financialUrl/sell/$userId/$amount")
             when (response.status) {
