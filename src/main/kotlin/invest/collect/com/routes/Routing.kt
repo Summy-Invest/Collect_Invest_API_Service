@@ -1,7 +1,6 @@
 package invest.collect.com.routes
 
-import invest.collect.com.routes.services.financialRoutes
-import invest.collect.com.routes.services.userRoutes
+import invest.collect.com.routes.services.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
@@ -13,6 +12,10 @@ fun Application.configureRouting() {
 
         route("financialService"){
             financialRoutes()
+        }
+
+        route("collectibleService"){
+            collectibleRoutes()
         }
 
     }

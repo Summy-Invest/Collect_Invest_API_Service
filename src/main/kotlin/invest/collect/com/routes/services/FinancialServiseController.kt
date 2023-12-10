@@ -1,6 +1,6 @@
 package invest.collect.com.routes.services
 
-import invest.collect.com.entities.Financial.Status
+import invest.collect.com.entities.financial.Status
 import invest.collect.com.entities.Message
 import invest.collect.com.utils.HttpClientFactory
 import io.ktor.client.call.*
@@ -13,13 +13,13 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-const val url = "http://localhost:7777"
+const val financialUrl = "http://localhost:7777"
 fun Route.financialRoutes() {
     put("/topUp/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Int = call.parameters["amount"]!!.toInt()
         HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.put("$url/topUp/$userId/$amount")
+            val response: HttpResponse = client.put("$financialUrl/topUp/$userId/$amount")
             when (response.status) {
                 HttpStatusCode.OK -> {
                     call.respond(HttpStatusCode.OK, "$amount")
@@ -40,7 +40,7 @@ fun Route.financialRoutes() {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Int = call.parameters["amount"]!!.toInt()
         HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.post("$url/buy/$userId/$amount")
+            val response: HttpResponse = client.post("$financialUrl/buy/$userId/$amount")
             when (response.status) {
                 HttpStatusCode.OK -> {
                     call.respond(HttpStatusCode.OK, response.body<Status>())
@@ -61,7 +61,7 @@ fun Route.financialRoutes() {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Int = call.parameters["amount"]!!.toInt()
         HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.post("$url/sell/$userId/$amount")
+            val response: HttpResponse = client.post("$financialUrl/sell/$userId/$amount")
             when (response.status) {
                 HttpStatusCode.OK -> {
                     call.respond(HttpStatusCode.OK, response.body<Status>())

@@ -1,4 +1,4 @@
-package invest.collect.com.entities.Financial
+package invest.collect.com.entities.user
 
 import kotlinx.serialization.Serializable
 
