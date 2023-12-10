@@ -60,5 +60,4 @@ fun Route.userRoutes(){
         }
     }
 
-
 }

@@ -2,6 +2,7 @@ package invest.collect.com.routes.services
 
 import invest.collect.com.entities.financial.Status
 import invest.collect.com.entities.Message
+import invest.collect.com.entities.financial.Wallet
 import invest.collect.com.utils.HttpClientFactory
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -78,4 +79,23 @@ fun Route.financialRoutes() {
         }
     }
 
+    get("/getWallet/{userId}") {
+        val userId: Long = call.parameters["userId"]!!.toLong()
+        HttpClientFactory.createHttpClient().use { client ->
+            val response: HttpResponse = client.post("$financialUrl/getWallet/$userId")
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    call.respond(HttpStatusCode.OK, response.body<Wallet>())
+                }
+
+                else -> {
+                    call.respondText(
+                        text = Json.encodeToString(response.body<Message>()),
+                        contentType = ContentType.Application.Json,
+                        status = HttpStatusCode.ServiceUnavailable
+                    )
+                }
+            }
+        }
+    }
 }
