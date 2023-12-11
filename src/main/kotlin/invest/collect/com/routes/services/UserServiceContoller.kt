@@ -2,7 +2,7 @@ package invest.collect.com.routes.services
 import invest.collect.com.entities.Message
 import invest.collect.com.entities.user.AuthenticatedUser
 import invest.collect.com.entities.user.User
-import invest.collect.com.utils.HttpClientFactory
+import invest.collect.com.utils.HttpClientSingleton
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -18,7 +18,7 @@ const val userUrl = "http://localhost:9999"
 fun Route.userRoutes(){
     post("/signUp") {
         val user = call.receive<User>()
-        val client = HttpClientFactory.client
+        val client = HttpClientSingleton.client
         val response: HttpResponse = client.post("$userUrl/signUp")
         {
             contentType(ContentType.Application.Json)
@@ -41,7 +41,7 @@ fun Route.userRoutes(){
     get("/logIn/{email}/{password}") {
         val email = call.parameters["email"]!!
         val password = call.parameters["password"]!!
-        val client = HttpClientFactory.client
+        val client = HttpClientSingleton.client
         val response: HttpResponse = client.get("$userUrl/logIn/$email/$password")
         when (response.status) {
             HttpStatusCode.OK -> {

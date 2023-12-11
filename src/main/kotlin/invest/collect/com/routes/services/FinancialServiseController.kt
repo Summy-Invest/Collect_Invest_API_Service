@@ -3,7 +3,7 @@ package invest.collect.com.routes.services
 import invest.collect.com.entities.financial.Status
 import invest.collect.com.entities.Message
 import invest.collect.com.entities.financial.Wallet
-import invest.collect.com.utils.HttpClientFactory
+import invest.collect.com.utils.HttpClientSingleton
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -19,7 +19,7 @@ fun Route.financialRoutes() {
     put("/topUp/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Double = call.parameters["amount"]!!.toDouble()
-        val client = HttpClientFactory.client
+        val client = HttpClientSingleton.client
         val response: HttpResponse = client.put("$financialUrl/topUp/$userId/$amount")
         when (response.status) {
             HttpStatusCode.OK -> {
@@ -39,7 +39,7 @@ fun Route.financialRoutes() {
     post("/buy/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Double = call.parameters["amount"]!!.toDouble()
-        val client = HttpClientFactory.client
+        val client = HttpClientSingleton.client
         val response: HttpResponse = client.post("$financialUrl/buy/$userId/$amount")
         when (response.status) {
             HttpStatusCode.OK -> {
@@ -59,7 +59,7 @@ fun Route.financialRoutes() {
     post("/sell/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Double = call.parameters["amount"]!!.toDouble()
-        val client = HttpClientFactory.client
+        val client = HttpClientSingleton.client
         val response: HttpResponse = client.post("$financialUrl/sell/$userId/$amount")
         when (response.status) {
             HttpStatusCode.OK -> {
@@ -78,7 +78,7 @@ fun Route.financialRoutes() {
 
     get("/getWallet/{userId}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
-        val client = HttpClientFactory.client
+        val client = HttpClientSingleton.client
         val response: HttpResponse = client.get("$financialUrl/getWallet/$userId")
         when (response.status) {
             HttpStatusCode.OK -> {
