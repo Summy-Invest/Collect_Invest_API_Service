@@ -19,20 +19,19 @@ fun Route.financialRoutes() {
     put("/topUp/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Double = call.parameters["amount"]!!.toDouble()
-        HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.put("$financialUrl/topUp/$userId/$amount")
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, "$amount")
-                }
+        val client = HttpClientFactory.client
+        val response: HttpResponse = client.put("$financialUrl/topUp/$userId/$amount")
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, "$amount")
+            }
 
-                else -> {
-                    call.respondText(
-                        text = Json.encodeToString(response.body<Message>()),
-                        contentType = ContentType.Application.Json,
-                        status = response.status
-                    )
-                }
+            else -> {
+                call.respondText(
+                    text = Json.encodeToString(response.body<Message>()),
+                    contentType = ContentType.Application.Json,
+                    status = response.status
+                )
             }
         }
     }
@@ -40,20 +39,19 @@ fun Route.financialRoutes() {
     post("/buy/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Double = call.parameters["amount"]!!.toDouble()
-        HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.post("$financialUrl/buy/$userId/$amount")
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, response.body<Status>())
-                }
+        val client = HttpClientFactory.client
+        val response: HttpResponse = client.post("$financialUrl/buy/$userId/$amount")
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, response.body<Status>())
+            }
 
-                else -> {
-                    call.respondText(
-                        text = Json.encodeToString(Message("error while connecting to financial service")),
-                        contentType = ContentType.Application.Json,
-                        status = HttpStatusCode.ServiceUnavailable
-                    )
-                }
+            else -> {
+                call.respondText(
+                    text = Json.encodeToString(Message("error while connecting to financial service")),
+                    contentType = ContentType.Application.Json,
+                    status = HttpStatusCode.ServiceUnavailable
+                )
             }
         }
     }
@@ -61,40 +59,38 @@ fun Route.financialRoutes() {
     post("/sell/{userId}/{amount}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         val amount: Double = call.parameters["amount"]!!.toDouble()
-        HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.post("$financialUrl/sell/$userId/$amount")
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, response.body<Status>())
-                }
+        val client = HttpClientFactory.client
+        val response: HttpResponse = client.post("$financialUrl/sell/$userId/$amount")
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, response.body<Status>())
+            }
 
-                else -> {
-                    call.respondText(
-                        text = Json.encodeToString(Message("error while connecting to financial service")),
-                        contentType = ContentType.Application.Json,
-                        status = HttpStatusCode.ServiceUnavailable
-                    )
-                }
+            else -> {
+                call.respondText(
+                    text = Json.encodeToString(Message("error while connecting to financial service")),
+                    contentType = ContentType.Application.Json,
+                    status = HttpStatusCode.ServiceUnavailable
+                )
             }
         }
     }
 
     get("/getWallet/{userId}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
-        HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.get("$financialUrl/getWallet/$userId")
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, response.body<Wallet>())
-                }
+        val client = HttpClientFactory.client
+        val response: HttpResponse = client.get("$financialUrl/getWallet/$userId")
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, response.body<Wallet>())
+            }
 
-                else -> {
-                    call.respondText(
-                        text = Json.encodeToString(response.body<Message>()),
-                        contentType = ContentType.Application.Json,
-                        status = HttpStatusCode.ServiceUnavailable
-                    )
-                }
+            else -> {
+                call.respondText(
+                    text = Json.encodeToString(response.body<Message>()),
+                    contentType = ContentType.Application.Json,
+                    status = HttpStatusCode.ServiceUnavailable
+                )
             }
         }
     }

@@ -18,23 +18,22 @@ const val userUrl = "http://localhost:9999"
 fun Route.userRoutes(){
     post("/signUp") {
         val user = call.receive<User>()
-        HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.post("$userUrl/signUp")
-            {
-                contentType(ContentType.Application.Json)
-                setBody(user)
+        val client = HttpClientFactory.client
+        val response: HttpResponse = client.post("$userUrl/signUp")
+        {
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, response.body<AuthenticatedUser>())
             }
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, response.body<AuthenticatedUser>())
-                }
-                else -> {
-                    call.respondText(
-                        text = Json.encodeToString(response.body<Message>()),
-                        contentType = ContentType.Application.Json,
-                        status = HttpStatusCode.ServiceUnavailable
-                    )
-                }
+            else -> {
+                call.respondText(
+                    text = Json.encodeToString(response.body<Message>()),
+                    contentType = ContentType.Application.Json,
+                    status = HttpStatusCode.ServiceUnavailable
+                )
             }
         }
     }
@@ -42,19 +41,18 @@ fun Route.userRoutes(){
     get("/logIn/{email}/{password}") {
         val email = call.parameters["email"]!!
         val password = call.parameters["password"]!!
-        HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.get("$userUrl/logIn/$email/$password")
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, response.body<AuthenticatedUser>())
-                }
-                else -> {
-                    call.respondText(
-                        text = Json.encodeToString(response.body<Message>()),
-                        contentType = ContentType.Application.Json,
-                        status = HttpStatusCode.ServiceUnavailable
-                    )
-                }
+        val client = HttpClientFactory.client
+        val response: HttpResponse = client.get("$userUrl/logIn/$email/$password")
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, response.body<AuthenticatedUser>())
+            }
+            else -> {
+                call.respondText(
+                    text = Json.encodeToString(response.body<Message>()),
+                    contentType = ContentType.Application.Json,
+                    status = HttpStatusCode.ServiceUnavailable
+                )
             }
         }
     }
