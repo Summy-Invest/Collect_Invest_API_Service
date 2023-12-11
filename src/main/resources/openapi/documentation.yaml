@@ -4,38 +4,86 @@ info:
   description: "Collect_Invest_API_Service API"
   version: "1.0.0"
 servers:
-- url: "https://localhost:1111"
+- url: "http://localhost:1111"
 paths:
-  /financialService/buy/{userId}/{amount}:
+  /collectibleService/buy:
     post:
       description: ""
-      parameters:
-      - name: "userId"
-        in: "path"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/BuySellRequest"
         required: true
-        schema:
-          type: "string"
-      - name: "amount"
+      responses:
+        "200":
+          description: ""
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /collectibleService/getAllCollectibles:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /collectibleService/getCollectible/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
         in: "path"
         required: true
         schema:
           type: "string"
       responses:
         "200":
-          description: "OK"
+          description: ""
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Status"
-        "503":
-          description: "Service Unavailable"
+                type: "string"
+  /collectibleService/sell:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/BuySellRequest"
+        required: true
+      responses:
+        "200":
+          description: ""
           content:
-            application/json:
+            '*/*':
               schema:
                 type: "string"
   /financialService/getWallet/{userId}:
     get:
-      description: ""
+      description: "post(\"/buy/{userId}/{amount}\") { <br> val userId: Long = call.parameters[\"\
+        userId\"]!!.toLong() <br> val amount: Double = call.parameters[\"amount\"\
+        ]!!.toDouble() <br> val client = HttpClientSingleton.client <br> val response:\
+        \ HttpResponse = client.post(\"$financialUrl/buy/$userId/$amount\") <br> when\
+        \ (response.status) { <br> HttpStatusCode.OK -> { <br> call.respond(HttpStatusCode.OK,\
+        \ response.body<Status>()) <br> } <br> else -> { <br> call.respondText( <br>\
+        \ text = Json.encodeToString(Message(\"error while connecting to financial\
+        \ service\")), <br> contentType = ContentType.Application.Json, <br> status\
+        \ = HttpStatusCode.ServiceUnavailable <br> ) <br> } <br> } <br> } <br> post(\"\
+        /sell/{userId}/{amount}\") { <br> val userId: Long = call.parameters[\"userId\"\
+        ]!!.toLong() <br> val amount: Double = call.parameters[\"amount\"]!!.toDouble()\
+        \ <br> val client = HttpClientSingleton.client <br> val response: HttpResponse\
+        \ = client.post(\"$financialUrl/sell/$userId/$amount\") <br> when (response.status)\
+        \ { <br> HttpStatusCode.OK -> { <br> call.respond(HttpStatusCode.OK, response.body<Status>())\
+        \ <br> } <br> else -> { <br> call.respondText( <br> text = Json.encodeToString(Message(\"\
+        error while connecting to financial service\")), <br> contentType = ContentType.Application.Json,\
+        \ <br> status = HttpStatusCode.ServiceUnavailable <br> ) <br> } <br> } <br>\
+        \ }"
       parameters:
       - name: "userId"
         in: "path"
@@ -49,33 +97,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Wallet"
-        "503":
-          description: "Service Unavailable"
-          content:
-            application/json:
-              schema:
-                type: "string"
-  /financialService/sell/{userId}/{amount}:
-    post:
-      description: ""
-      parameters:
-      - name: "userId"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      - name: "amount"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/Status"
         "503":
           description: "Service Unavailable"
           content:
@@ -123,12 +144,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Message"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Authorised"
+                $ref: "#/components/schemas/AuthenticatedUser"
         "503":
           description: "Service Unavailable"
           content:
@@ -150,12 +166,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Message"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Authorised"
+                $ref: "#/components/schemas/AuthenticatedUser"
         "503":
           description: "Service Unavailable"
           content:
@@ -164,16 +175,43 @@ paths:
                 type: "string"
 components:
   schemas:
-    Status:
+    BuySellRequest:
+      type: "object"
+      properties:
+        collectibleId:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        shares:
+          type: "integer"
+          format: "int32"
+    CollectibleItem:
       type: "object"
       properties:
         id:
           type: "integer"
           format: "int64"
-        status:
+        name:
           type: "string"
+        description:
+          type: "string"
+        category:
+          type: "string"
+        photoUrl:
+          type: "string"
+        currentPrice:
+          type: "number"
+          format: "double"
+        availableShares:
+          type: "integer"
+          format: "int32"
       required:
-      - "status"
+      - "name"
+      - "description"
+      - "category"
+      - "photoUrl"
     Wallet:
       type: "object"
       properties:
@@ -184,19 +222,22 @@ components:
           type: "integer"
           format: "int64"
         balance:
-          type: "integer"
-          format: "int32"
+          type: "number"
+          format: "double"
         status:
           type: "string"
       required:
       - "status"
-    Message:
+    AuthenticatedUser:
       type: "object"
       properties:
-        message:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
           type: "string"
       required:
-      - "message"
+      - "name"
     User:
       type: "object"
       properties:
