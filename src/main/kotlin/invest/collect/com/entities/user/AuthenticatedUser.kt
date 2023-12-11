@@ -3,7 +3,8 @@ package invest.collect.com.entities.user
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Account(
-    val email: String,
-    val password: String
+data class AuthenticatedUser(
+    val id: Int,
+    val name: String
 )
+

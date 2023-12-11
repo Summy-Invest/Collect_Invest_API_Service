@@ -82,7 +82,7 @@ fun Route.financialRoutes() {
     get("/getWallet/{userId}") {
         val userId: Long = call.parameters["userId"]!!.toLong()
         HttpClientFactory.createHttpClient().use { client ->
-            val response: HttpResponse = client.post("$financialUrl/getWallet/$userId")
+            val response: HttpResponse = client.get("$financialUrl/getWallet/$userId")
             when (response.status) {
                 HttpStatusCode.OK -> {
                     call.respond(HttpStatusCode.OK, response.body<Wallet>())

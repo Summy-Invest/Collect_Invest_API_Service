@@ -1,7 +1,6 @@
 package invest.collect.com.routes.services
 import invest.collect.com.entities.Message
-import invest.collect.com.entities.financial.Status
-import invest.collect.com.entities.user.Account
+import invest.collect.com.entities.user.AuthenticatedUser
 import invest.collect.com.entities.user.User
 import invest.collect.com.utils.HttpClientFactory
 import io.ktor.client.call.*
@@ -27,7 +26,7 @@ fun Route.userRoutes(){
             }
             when (response.status) {
                 HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, Message("Authorised"))
+                    call.respond(HttpStatusCode.OK, response.body<AuthenticatedUser>())
                 }
                 else -> {
                     call.respondText(
@@ -47,7 +46,7 @@ fun Route.userRoutes(){
             val response: HttpResponse = client.get("$userUrl/logIn/$email/$password")
             when (response.status) {
                 HttpStatusCode.OK -> {
-                    call.respond(HttpStatusCode.OK, Message("Authorised"))
+                    call.respond(HttpStatusCode.OK, response.body<AuthenticatedUser>())
                 }
                 else -> {
                     call.respondText(
