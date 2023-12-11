@@ -16,40 +16,51 @@ const val collectibleUrl = "http://localhost:3937"
 
 fun Route.collectibleRoutes(){
     post("/buy"){
-        val buyRequest = call.receive<BuySellRequest>()
-        val client = HttpClientSingleton.client
-        val response: HttpResponse = client.post("$collectibleUrl/buyCollectible")
-        {
-            contentType(ContentType.Application.Json)
-            setBody(buyRequest)
-        }
-        when (response.status) {
-            HttpStatusCode.OK -> {
-                call.respond(HttpStatusCode.OK, "Покупка успешно выполнена")
-            }
+        try {
 
-            else -> {
-                call.respond(response.status, response.body<TypeInfo>().toString())
+
+            val buyRequest = call.receive<BuySellRequest>()
+            val client = HttpClientSingleton.client
+            val response: HttpResponse = client.post("$collectibleUrl/buyCollectible")
+            {
+                contentType(ContentType.Application.Json)
+                setBody(buyRequest)
             }
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    call.respond(HttpStatusCode.OK, "Покупка успешно выполнена")
+                }
+
+                else -> {
+                    call.respond(response.status, response.body<String>())
+                }
+            }
+        }catch (e: Throwable){
+            call.respond(HttpStatusCode.BadRequest, e.toString())
         }
     }
 
     post("/sell"){
-        val sellRequest = call.receive<BuySellRequest>()
-        val client = HttpClientSingleton.client
-        val response: HttpResponse = client.post("$collectibleUrl/sellCollectible")
-        {
-            contentType(ContentType.Application.Json)
-            setBody(sellRequest)
-        }
-        when (response.status) {
-            HttpStatusCode.OK -> {
-                call.respond(HttpStatusCode.OK, "Продажа успешно выполнена")
-            }
+        try {
 
-            else -> {
-                call.respond(response.status, response.body<TypeInfo>().toString())
+            val sellRequest = call.receive<BuySellRequest>()
+            val client = HttpClientSingleton.client
+            val response: HttpResponse = client.post("$collectibleUrl/sellCollectible")
+            {
+                contentType(ContentType.Application.Json)
+                setBody(sellRequest)
             }
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    call.respond(HttpStatusCode.OK, "Продажа успешно выполнена")
+                }
+
+                else -> {
+                    call.respond(response.status, response.body<String>())
+                }
+            }
+        }catch (e: Throwable){
+            call.respond(HttpStatusCode.BadRequest, e.toString())
         }
     }
 
@@ -63,8 +74,7 @@ fun Route.collectibleRoutes(){
             }
 
             else -> {
-                call.respond(response.status, response.body<TypeInfo>().toString())
-            }
+                call.respond(response.status, response.body<String>())            }
         }
     }
 
@@ -77,8 +87,7 @@ fun Route.collectibleRoutes(){
             }
 
             else -> {
-                call.respond(response.status, response.body<TypeInfo>().toString())
-            }
+                call.respond(response.status, response.body<String>())            }
         }
     }
 }

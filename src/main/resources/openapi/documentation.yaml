@@ -207,11 +207,6 @@ components:
         availableShares:
           type: "integer"
           format: "int32"
-      required:
-      - "name"
-      - "description"
-      - "category"
-      - "photoUrl"
     Wallet:
       type: "object"
       properties:
@@ -226,8 +221,6 @@ components:
           format: "double"
         status:
           type: "string"
-      required:
-      - "status"
     AuthenticatedUser:
       type: "object"
       properties:
@@ -236,8 +229,6 @@ components:
           format: "int32"
         name:
           type: "string"
-      required:
-      - "name"
     User:
       type: "object"
       properties:
@@ -247,7 +238,3 @@ components:
           type: "string"
         password:
           type: "string"
-      required:
-      - "name"
-      - "email"
-      - "password"
