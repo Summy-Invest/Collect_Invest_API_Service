@@ -10,7 +10,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.reflect.*
 
 const val collectibleUrl = "http://localhost:3937"
 
@@ -74,7 +73,8 @@ fun Route.collectibleRoutes(){
             }
 
             else -> {
-                call.respond(response.status, response.body<String>())            }
+                call.respond(response.status, response.body<String>())
+            }
         }
     }
 
@@ -87,7 +87,23 @@ fun Route.collectibleRoutes(){
             }
 
             else -> {
-                call.respond(response.status, response.body<String>())            }
+                call.respond(response.status, response.body<String>())
+            }
+        }
+    }
+
+    get("/getAllCollectibles/{userId}") {
+        val userId = call.parameters["userId"]!!.toLong()
+        val client = HttpClientSingleton.client
+        val response: HttpResponse = client.get("$collectibleUrl/getAllUserCollectibles/$userId")
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                call.respond(HttpStatusCode.OK, response.body<List<CollectibleItem>>())
+            }
+
+            else -> {
+                call.respond(response.status, response.body<String>())
+            }
         }
     }
 }
