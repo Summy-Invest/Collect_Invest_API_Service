@@ -92,7 +92,7 @@ fun Route.collectibleRoutes(){
         }
     }
 
-    get("/getAllCollectibles/{userId}") {
+    get("/getAllUserCollectibles/{userId}") {
         val userId = call.parameters["userId"]!!.toLong()
         val client = HttpClientSingleton.client
         val response: HttpResponse = client.get("$collectibleUrl/getAllUserCollectibles/$userId")
