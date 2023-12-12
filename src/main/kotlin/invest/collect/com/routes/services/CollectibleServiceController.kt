@@ -31,11 +31,11 @@ fun Route.collectibleRoutes(){
                 }
 
                 else -> {
-                    call.respond(response.status, response.body<String>())
+                    call.respond(response.status, response.body<String>()+call.receive<String>())
                 }
             }
         }catch (e: Throwable){
-            call.respond(HttpStatusCode.BadRequest, e.toString())
+            call.respond(HttpStatusCode.BadRequest, e.toString()+call.receive<String>())
         }
     }
 
@@ -55,11 +55,11 @@ fun Route.collectibleRoutes(){
                 }
 
                 else -> {
-                    call.respond(response.status, response.body<String>())
+                    call.respond(response.status, response.body<String>()+call.receive<String>())
                 }
             }
         }catch (e: Throwable){
-            call.respond(HttpStatusCode.BadRequest, e.toString())
+            call.respond(HttpStatusCode.BadRequest, e.toString()+call.receive<String>())
         }
     }
 
