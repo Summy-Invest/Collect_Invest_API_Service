@@ -106,4 +106,26 @@ fun Route.collectibleRoutes(){
             }
         }
     }
+
+    get("/getUserCollectibles/{userId}/{collectibleId}") {
+        try {
+            val userId = call.parameters["userId"]!!.toLong()
+            val collectibleId = call.parameters["collectibleId"]!!.toLong()
+            val client = HttpClientSingleton.client
+            val response: HttpResponse = client.get("$collectibleUrl/getUserCollectibles/$userId/$collectibleId")
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    call.respond(HttpStatusCode.OK, response.body<UserShares>())
+                }
+
+                else -> {
+                    call.respond(response.status, response.body<String>())
+                }
+            }
+        } catch (e: Throwable) {
+            call.respond(HttpStatusCode.InternalServerError, e.toString())
+        }
+    }
+
+
 }
