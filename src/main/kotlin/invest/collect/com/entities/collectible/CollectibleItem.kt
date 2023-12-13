@@ -12,3 +12,5 @@ data class CollectibleItem(
     val currentPrice: Double,
     var availableShares: Int
 )
+
+
