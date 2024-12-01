@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 
 fun Application.configureSwagger() {
     routing {
-        swaggerUI(path = "doc") {
+        swaggerUI(path = "swagger") {
         }
     }
 }

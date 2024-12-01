@@ -14,7 +14,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-const val userUrl = "http://localhost:9999"
+const val userUrl = "http://user-service:9999"
 fun Route.userRoutes(){
     post("/signUp") {
         try {

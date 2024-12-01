@@ -11,7 +11,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-const val collectibleUrl = "http://localhost:3937"
+const val collectibleUrl = "http://collectible-service:3937"
 
 fun Route.collectibleRoutes(){
     post("/buy"){
